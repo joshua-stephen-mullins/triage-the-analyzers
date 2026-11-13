@@ -13,6 +13,13 @@
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>PMD quickstart, with Project Pulse's decisions.</description>
     <rule ref="rulesets/java/quickstart.xml">
+        <!-- D4, turned off. Every log call in Project Pulse goes through SLF4J with {} placeholders, so
+             the message is only built when the level is on, and the arguments at the four flagged
+             sites are a field getter or a size() (student.getEmail(), section.getSectionName(),
+             result.sent(), owedItems.size(), templates.size(), authentication.getName()). An
+             isXxxEnabled() guard would add a branch to save a getter call. Revisit if a log call ever
+             passes an argument that is expensive to compute. -->
+        <exclude name="GuardLogStatement"/>
         <!-- D2, narrowed: re-added below with JPA entities excepted. -->
         <exclude name="UnnecessaryConstructor"/>
     </rule>
