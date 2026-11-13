@@ -13,5 +13,21 @@
          xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
     <description>PMD quickstart, with Project Pulse's decisions.</description>
     <rule ref="rulesets/java/quickstart.xml">
+        <!-- D2, narrowed: re-added below with JPA entities excepted. -->
+        <exclude name="UnnecessaryConstructor"/>
+    </rule>
+
+    <!-- D2, narrowed. UnnecessaryConstructor is enforced everywhere except on @Entity classes. JPA
+         requires every entity to have a no-argument constructor. When it is the only constructor the
+         compiler would supply it, but deleting it means the day someone adds a second constructor the
+         implicit one disappears and Hibernate fails at startup, not at compile time. On an entity the
+         explicit constructor is a guard, so the rule's advice is wrong there. Its companion rule,
+         UncommentedEmptyConstructor, stays on for all classes: each kept constructor says why it is
+         empty ("Required by JPA."). -->
+    <rule ref="category/java/codestyle.xml/UnnecessaryConstructor">
+        <properties>
+            <property name="violationSuppressXPath"
+                      value="./ancestor-or-self::ClassDeclaration[pmd-java:hasAnnotation('jakarta.persistence.Entity')]"/>
+        </properties>
     </rule>
 </ruleset>
