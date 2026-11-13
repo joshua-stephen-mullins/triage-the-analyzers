@@ -7,4 +7,22 @@
 
      Unlike the baseline, this file may grow, but every entry is a reviewed decision. -->
 <FindBugsFilter>
+    <!-- D1, turned off for Project Pulse's own code. EI_EXPOSE_REP and EI_EXPOSE_REP2 object to an
+         object keeping, or handing out, a mutable object without copying it. Of the 219 findings
+         baselined on 2026-11-01:
+           - 144 are JPA entities. Hibernate tracks changes through the collection the entity holds,
+             and services edit entities through their getters (TeamService.transferTeam calls
+             from.getTeams().remove(team) and to.getTeams().add(team)), so a
+             defensive copy would change behavior.
+           - 29 are Spring beans keeping the bean injected into their constructor, which is how
+             dependency injection works.
+           - 46 are DTOs and plain carrier classes. No code mutates a DTO's list after it is built
+             (the converters build them and Jackson serializes them); the one class built up through
+             its getter, WeeklyPeerEvaluationReport in EvaluationService, relies on getting the real
+             list. List.copyOf would also reject a request body with a null list.
+         Revisit if a class starts caching or sharing a DTO between requests. -->
+    <Match>
+        <Package name="~team\.projectpulse(\..*)?"/>
+        <Bug pattern="EI_EXPOSE_REP,EI_EXPOSE_REP2"/>
+    </Match>
 </FindBugsFilter>
