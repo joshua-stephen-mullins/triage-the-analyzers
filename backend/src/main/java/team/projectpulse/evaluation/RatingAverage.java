@@ -7,6 +7,7 @@ public class RatingAverage {
 
 
     public RatingAverage() {
+        // Intentionally empty: built bean-style, fields are set through the setters.
     }
 
     public RatingAverage(Integer criterionId, Double averageScore) {

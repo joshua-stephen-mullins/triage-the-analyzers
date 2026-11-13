@@ -16,6 +16,7 @@ public class Result {
 
 
     public Result() {
+        // Intentionally empty: built bean-style, fields are set through the setters.
     }
 
     public Result(boolean flag, Integer code, String message) {
