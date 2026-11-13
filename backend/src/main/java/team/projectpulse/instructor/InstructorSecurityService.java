@@ -40,7 +40,7 @@ public class InstructorSecurityService {
     public boolean isCurrentUserAdminOfInstructorCourse(Integer instructorId) {
         Integer adminIdFromJwt = this.userUtils.getUserId();
         Instructor instructor = this.instructorRepository.findById(instructorId).orElse(null);
-        if (instructor == null) {
+        if (instructor == null) { // NOPMD - SimplifyBooleanReturns: kept as a guard clause; it is the "id names no row -> deny" case of the fail-closed contract in the class comment, and folding it into the return changes no behavior
             return false;
         }
         return instructor.getCourses().stream()
